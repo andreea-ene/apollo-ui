@@ -74,6 +74,7 @@ const STATUSES = [
   'Failed',
   'Paused',
   'ActionNeeded',
+  'Cancelled',
 ] as const;
 
 const GRID_CONFIG = {
@@ -593,6 +594,15 @@ const executionStateCards = [
     description:
       'The process is blocked waiting for human input during an active execution. Shows a flag icon and an always-visible "Action needed" pill at the top-right of the node. Only rendered when the flow is in an executing state.',
   },
+  {
+    state: 'Cancelled',
+    value: "'Cancelled' / 'UserCancelled'",
+    borderClass: 'border-border',
+    bgClass: 'bg-muted/40',
+    iconClass: 'bg-muted',
+    description:
+      'The run stopped before this node finished. A cancel is a settled, neutral outcome rather than a failure, so neither value is red. They stay distinguishable by glyph: circle-stop for an engine or instance cancel, circle-slash for an operator cancelling this one element.',
+  },
 ] as const;
 
 const executionStateRows = [
@@ -630,6 +640,12 @@ const executionStateRows = [
     state: 'ActionNeeded',
     trigger: "status: 'ActionNeeded'",
     meaning: 'Process blocked, waiting for human input before continuing',
+  },
+  {
+    state: 'Cancelled',
+    trigger: "status: 'Cancelled' or status: 'UserCancelled'",
+    meaning:
+      'Run stopped before this node finished. Both variants are neutral rather than red, and separate on the glyph: Cancelled (engine or instance level) uses circle-stop, UserCancelled (one element stopped by an operator) uses circle-slash',
   },
 ] as const;
 

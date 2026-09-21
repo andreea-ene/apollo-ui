@@ -33,12 +33,15 @@ describe('ExecutionStatusIcon', () => {
     expect(spinner).toHaveAttribute('data-label', 'In progress');
   });
 
-  it('renders UserCancelled with the cancelled glyph and info color', () => {
-    render(<ExecutionStatusIcon status="UserCancelled" size={20} />);
+  it.each([
+    ['Cancelled', 'circle-stop'],
+    ['UserCancelled', 'circle-slash'],
+  ])('renders %s with the %s glyph and muted color', (status, glyph) => {
+    render(<ExecutionStatusIcon status={status} size={20} />);
 
     const icon = screen.getByTestId('canvas-icon');
-    expect(icon).toHaveAttribute('data-icon', 'circle-stop');
-    expect(icon).toHaveAttribute('data-color', 'var(--color-info-icon)');
+    expect(icon).toHaveAttribute('data-icon', glyph);
+    expect(icon).toHaveAttribute('data-color', 'var(--color-foreground-muted)');
     expect(icon).toHaveAttribute('data-size', '20');
   });
 
@@ -51,8 +54,9 @@ describe('ExecutionStatusIcon', () => {
 });
 
 describe('getExecutionStatusColor', () => {
-  it('keeps UserCancelled aligned with info-colored execution states', () => {
-    expect(getExecutionStatusColor('UserCancelled')).toBe('var(--color-info-icon)');
+  it('maps both cancel variants to the muted color, not an error or info color', () => {
+    expect(getExecutionStatusColor('Cancelled')).toBe('var(--color-foreground-muted)');
+    expect(getExecutionStatusColor('UserCancelled')).toBe('var(--color-foreground-muted)');
   });
 
   it('maps InProgress to the primary color', () => {

@@ -17,10 +17,11 @@ export function getExecutionStatusColor(status: string | undefined): string {
     case 'Paused':
     case 'Warning':
       return 'var(--color-warning-icon)';
+    // A cancel is a settled, neutral outcome: not an error, not in flight. Both variants
+    // share the color and separate on the glyph.
     case 'Cancelled':
-      return 'var(--color-error-icon)';
     case 'UserCancelled':
-      return 'var(--color-info-icon)';
+      return 'var(--color-foreground-muted)';
     case 'Failed':
       return 'var(--color-error-icon)';
     case 'Terminated':
@@ -99,9 +100,12 @@ export function ExecutionStatusIcon({
         return <CanvasIcon icon="circle-alert" size={size} color={color} />;
       case 'Terminated':
         return <CanvasIcon icon="circle-x" size={size} color={color} />;
+      // Same neutral color, different glyph: an operator-issued element cancel must stay
+      // distinguishable from an engine/instance cancel.
       case 'Cancelled':
-      case 'UserCancelled':
         return <CanvasIcon icon="circle-stop" size={size} color={color} />;
+      case 'UserCancelled':
+        return <CanvasIcon icon="circle-slash" size={size} color={color} />;
       case 'NotExecuted':
         return <CanvasIcon icon="circle-dashed" size={size} color={color} />;
       case 'EarlyExit':
